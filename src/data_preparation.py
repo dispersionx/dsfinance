@@ -18,8 +18,10 @@ W_MONTH = 22
 TRAIN_RATIO = 0.70
 VAL_RATIO = 0.15
 
-# Output folder
-OUT_DIR = Path('/Users/dispersion/Documents/dsfinance')
+# Project root directory
+BASE_DIR = Path(__file__).resolve().parents[1]
+
+OUT_DIR = BASE_DIR / "data" / "processed"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -89,10 +91,14 @@ test = model_data.iloc[val_end:].copy()
 
 
 # 7. Save CSVs (Date as a column)
-processed_path = OUT_DIR / 'SP500_processed.csv'
-train_path = OUT_DIR / 'SP500_train.csv'
-val_path = OUT_DIR / 'SP500_val.csv'
-test_path = OUT_DIR / 'SP500_test.csv'
+processed_path = OUT_DIR / "SP500_processed.csv"
+
+splits_dir = OUT_DIR / "splits"
+splits_dir.mkdir(exist_ok=True)
+
+train_path = splits_dir / "SP500_train.csv"
+val_path   = splits_dir / "SP500_val.csv"
+test_path  = splits_dir / "SP500_test.csv"
 
 model_data.reset_index().to_csv(processed_path, index=False)
 train.reset_index().to_csv(train_path, index=False)
