@@ -4,6 +4,7 @@ from .config import DATA_PROCESSED, TRAIN_RATIO
 from .baselines import random_walk, historical_mean
 from .har import har_ols_expanding
 from .garch import garch11_expanding
+from .gjr_garch import gjr_garch_expanding
 
 def main():
     df = pd.read_csv(DATA_PROCESSED)
@@ -68,11 +69,39 @@ def main():
     })
     garch_t_fcst.to_csv("results/forecasts/garch11_t.csv", index=False)
 
+    # GJR-GARCH(1,1) – Normal
+    gjr_res = gjr_garch_expanding(df, start_idx, dist="normal")
+    results.append({
+        "model": gjr_res["model"],
+        "mse": gjr_res["mse"],
+        "qlike": gjr_res["qlike"],
+    })
+
+    pd.DataFrame({
+        "Date": df.loc[start_idx:, "Date"].to_numpy(),
+        "y_true": gjr_res["y_true"],
+        "y_pred": gjr_res["y_pred"],
+    }).to_csv("results/forecasts/gjr_garch_normal.csv", index=False)
+
+    # (Optional) GJR-GARCH(1,1) – Student-t
+    gjr_t = gjr_garch_expanding(df, start_idx, dist="t")
+    results.append({
+        "model": gjr_t["model"],
+        "mse": gjr_t["mse"],
+        "qlike": gjr_t["qlike"],
+    })
+
+    pd.DataFrame({
+        "Date": df.loc[start_idx:, "Date"].to_numpy(),
+        "y_true": gjr_t["y_true"],
+        "y_pred": gjr_t["y_pred"],
+    }).to_csv("results/forecasts/gjr_garch_t.csv", index=False)
+
     # Collect & save evaluation
     out = pd.DataFrame(results).sort_values("mse")
     print(out)
 
-    out_path = "results/evaluation/baselines_har_garch.csv"
+    out_path = "results/evaluation/baselines_har_garch_gjr.csv"
     out.to_csv(out_path, index=False)
     print(f"Saved: {out_path}")
 
