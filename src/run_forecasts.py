@@ -5,6 +5,7 @@ from .baselines import random_walk, historical_mean
 from .har import har_ols_expanding
 from .garch import garch11_expanding
 from .gjr_garch import gjr_garch_expanding
+from .arfima import arfima_on_rv_expanding
 
 def main():
     df = pd.read_csv(DATA_PROCESSED)
@@ -97,6 +98,20 @@ def main():
         "y_pred": gjr_t["y_pred"],
     }).to_csv("results/forecasts/gjr_garch_t.csv", index=False)
 
+    # ARFIMA-on-RV (Long memory)
+    arf_res = arfima_on_rv_expanding(df, start_idx, K=200)
+    results.append({
+        "model": arf_res["model"],
+        "mse": arf_res["mse"],
+        "qlike": arf_res["qlike"],
+    })
+
+    pd.DataFrame({
+        "Date": df.loc[start_idx:, "Date"].to_numpy(),
+        "y_true": arf_res["y_true"],
+        "y_pred": arf_res["y_pred"],
+    }).to_csv("results/forecasts/arfima_on_rv.csv", index=False)
+    
     # Collect & save evaluation
     out = pd.DataFrame(results).sort_values("mse")
     print(out)
