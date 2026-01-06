@@ -1,18 +1,13 @@
 import numpy as np
 
-# Mean Squared Error
 def mse(y_true, y_pred):
     y_true = np.asarray(y_true)
     y_pred = np.asarray(y_pred)
     return np.mean((y_true - y_pred) ** 2)
 
-# Quasi-Likelihood Loss
-def qlike(y_true, y_pred, eps=1e-12):
+def qlike(y_true, y_pred):
     y_true = np.asarray(y_true)
     y_pred = np.asarray(y_pred)
-    f = np.clip(y_pred, eps, None)
-    ratio = y_true / f
-    return np.mean(ratio - np.log(ratio) - 1.0)
-
-
-
+    eps = 1e-8
+    y_pred = np.maximum(y_pred, eps)
+    return np.mean(y_true / y_pred - np.log(y_true / y_pred) - 1)
