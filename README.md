@@ -1,7 +1,7 @@
 📈 One-Day-Ahead Volatility Forecasting Using Machine Learning
 Overview
 
-This project aims to forecast one-day-ahead volatility in equity markets using machine learning (ML) models.
+This project forecasts one-day-ahead volatility in equity markets using machine learning (ML) models.
 
 Accurate volatility forecasting is essential for:
 
@@ -9,9 +9,9 @@ Risk Management – e.g., Value-at-Risk (VaR), Expected Shortfall
 
 Derivative Pricing – volatility is a key input for options
 
-Portfolio Optimization – adjust allocations dynamically during market stress
+Portfolio Optimization – adjust allocations dynamically during periods of market stress
 
-We use S&P 500 daily data, preprocessed to include realized volatilities at different horizons (RV_d, RV_w, RV_m) and daily log returns (LogReturn). The models predict the next-day volatility, stored in the Target column.
+The dataset used is S&P 500 daily data, preprocessed to include realized volatilities at multiple horizons (RV_d, RV_w, RV_m) and daily log returns (LogReturn). The models predict the next-day volatility, stored in the Target column.
 
 📂 Project Structure
 dsfinance/
@@ -30,7 +30,7 @@ dsfinance/
 │   ├── config.py
 │   └── run_forecasts.py
 │
-├── forecasts/          # Raw model forecasts
+├── forecasts/           # Raw model forecasts
 │   ├── baselines.csv
 │   ├── lasso.csv
 │   ├── random_forest.csv
@@ -38,9 +38,9 @@ dsfinance/
 │   └── mlp.csv
 │
 ├── results/
-│   ├── evaluation/     # CSV comparisons between models
-│   ├── forecasts/      # Aligned forecasts with true values
-│   └── plots/          # Visual comparisons
+│   ├── evaluation/      # CSV comparisons between models
+│   ├── forecasts/       # Aligned forecasts with true values
+│   └── plots/           # Visual comparisons
 │
 └── README.md
 
@@ -49,7 +49,7 @@ dsfinance/
 
 Description: Historical mean-based forecast
 
-Purpose: Reference for evaluating ML models
+Purpose: Reference point for evaluating ML models
 
 Output: forecasts/baselines.csv
 
@@ -57,9 +57,9 @@ Output: forecasts/baselines.csv
 
 Description: Linear regression with L1 regularization
 
-Strength: Performs feature selection automatically
+Strength: Automatically selects the most relevant features
 
-Input Features: Lagged realized volatilities + returns
+Input Features: Lagged realized volatilities (RV_d, RV_w, RV_m) + past returns
 
 Output: forecasts/lasso.csv
 
@@ -67,7 +67,7 @@ Output: forecasts/lasso.csv
 
 Description: Ensemble tree-based model
 
-Strength: Captures nonlinear patterns, robust to overfitting
+Strength: Captures nonlinear relationships and is robust to overfitting
 
 Output: forecasts/random_forest.csv
 
@@ -75,7 +75,7 @@ Output: forecasts/random_forest.csv
 
 Description: Gradient boosting framework
 
-Strength: High predictive accuracy, handles complex nonlinearities
+Strength: High predictive accuracy and handles complex nonlinearities
 
 Output: forecasts/xgboost.csv
 
@@ -83,7 +83,7 @@ Output: forecasts/xgboost.csv
 
 Description: Feedforward neural network
 
-Strength: Captures nonlinear dependencies in time-series data
+Strength: Captures nonlinear dependencies in time-series features
 
 Output: forecasts/mlp.csv
 
@@ -93,7 +93,7 @@ RV_d	Daily realized volatility
 RV_w	Weekly realized volatility
 RV_m	Monthly realized volatility
 LogReturn	Daily log return
-Lagged versions	Past values to capture temporal dependencies
+Lagged features	Past values to capture temporal dependencies
 Target	Next-day realized volatility (prediction target)
 📊 Evaluation
 
@@ -105,14 +105,14 @@ QLIKE – Quasi-likelihood loss
 
 Outputs:
 
-results/forecasts/ → aligned forecasts (Date, y_true, y_pred)
+results/forecasts/ → aligned forecasts with Date, y_true, y_pred
 
 results/evaluation/ → pairwise metrics comparisons (MSE & QLIKE)
 
-results/plots/ → single plot comparing baseline vs all ML models
+results/plots/ → baseline vs all ML models
 
-Example Plot:
-baseline_vs_all_models.png shows the baseline, all ML model predictions, and true volatility.
+Plot Example:
+baseline_vs_all_models.png shows baseline, all ML model predictions, and true volatility.
 
 Terminal Output: Metrics for each model are printed for quick reference.
 
@@ -134,12 +134,12 @@ Forecast CSVs → results/forecasts/
 
 Evaluation metrics → results/evaluation/
 
-Combined plots → results/plots/
+Plots → results/plots/
 
 📌 Notes
 
-Paths & config: Defined in src/config.py
+All paths and configurations are defined in src/config.py
 
-Forecast alignment: Ensures y_pred matches true volatility (y_true) by date
+Forecasts are aligned with the true volatility for accurate evaluation
 
-Single combined plot: Easy visual comparison of baseline vs ML models
+A single combined plot allows visual comparison of baseline vs ML models
