@@ -2,12 +2,14 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 
-# Paths
 DATA_PROCESSED = BASE_DIR / "data" / "processed" / "SP500_processed.csv"
-FORECAST_DIR = BASE_DIR / "forecasts"
-EVAL_DIR = BASE_DIR / "results" / "evaluation"
 
-# Config
 TARGET_COL = "Target"
-N_LAGS = 5
+EPS = 1e-12
+
+# HAR regressors (t used to predict Target_t = RV_{t+1})
+HAR_FEATURES = ["RV_d", "RV_w", "RV_m"]
+
 TRAIN_RATIO = 0.70
+
+
